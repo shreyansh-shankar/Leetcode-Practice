@@ -1,0 +1,275 @@
+## Pattern
+
+👉 Heap / Priority Queue
+
+---
+
+## Recognition Trigger
+
+Look for phrases like:
+
+```text
+kth largest
+kth smallest
+top k
+largest k elements
+smallest k elements
+```
+
+These should immediately make you think:
+
+```text
+Heap
+```
+
+---
+
+# Your Solution
+
+```cpp
+priority_queue<int> pq;
+
+for (auto it : nums)
+    pq.push(it);
+
+for (int i = 0; i < k; i++) {
+    res = pq.top();
+    pq.pop();
+}
+
+return res;
+```
+
+---
+
+## Key Insight
+
+A max heap always keeps:
+
+```text
+largest element at the top
+```
+
+Example:
+
+```text
+nums = [3,2,1,5,6,4]
+k = 2
+```
+
+Heap:
+
+```text
+top = 6
+```
+
+Pop once:
+
+```text
+6 removed
+```
+
+New top:
+
+```text
+5
+```
+
+That's the 2nd largest.
+
+---
+
+# Complexity
+
+### Building heap
+
+```text
+O(n log n)
+```
+
+(using repeated pushes)
+
+### Removing k elements
+
+```text
+O(k log n)
+```
+
+Total:
+
+```text
+O(n log n)
+```
+
+Space:
+
+```text
+O(n)
+```
+
+---
+
+# Better Heap Solution
+
+Instead of storing all elements:
+
+Use a **min heap of size k**.
+
+---
+
+## Idea
+
+Keep only the largest k elements seen so far.
+
+```cpp
+priority_queue<
+    int,
+    vector<int>,
+    greater<int>
+> pq;
+```
+
+---
+
+Example:
+
+```text
+nums = [3,2,1,5,6,4]
+k = 2
+```
+
+Process:
+
+```text
+3 -> [3]
+2 -> [2,3]
+1 -> ignore (heap grows to 3 then pop smallest)
+
+5 -> [3,5]
+6 -> [5,6]
+4 -> [5,6]
+```
+
+Top:
+
+```text
+5
+```
+
+which is the 2nd largest.
+
+---
+
+## Complexity
+
+Time:
+
+```text
+O(n log k)
+```
+
+Space:
+
+```text
+O(k)
+```
+
+This is usually the expected heap solution.
+
+---
+
+# Best Possible Solution
+
+There's also:
+
+```text
+Quick Select
+```
+
+Pattern:
+
+```text
+Partitioning (same idea as Quick Sort)
+```
+
+Average:
+
+```text
+O(n)
+```
+
+Worst:
+
+```text
+O(n²)
+```
+
+Interviewers sometimes expect this if they ask:
+
+```text
+Can you do better than O(n log n)?
+```
+
+---
+
+# Personal Learning Note
+
+## Pattern
+
+Heap / Priority Queue
+
+---
+
+## Recognition Trigger
+
+```text
+kth largest
+kth smallest
+top k
+largest k elements
+smallest k elements
+```
+
+---
+
+## Key Insight
+
+A heap maintains order without fully sorting.
+
+For kth largest:
+
+```text
+Max Heap:
+pop k times
+
+OR
+
+Min Heap of size k:
+keep only k largest elements
+```
+
+---
+
+## Complexity
+
+### Max Heap
+
+```text
+Time: O(n log n)
+Space: O(n)
+```
+
+### Min Heap (size k)
+
+```text
+Time: O(n log k)
+Space: O(k)
+```
+
+---
+
+## One-line Memory Hook
+
+```text
+"kth" almost always suggests a heap.
+```
