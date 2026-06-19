@@ -1,0 +1,230 @@
+This looks like **LeetCode 35 - Search Insert Position**.
+
+Before notes, I want to point out something important:
+
+### Your solution is much more complicated than needed.
+
+The variables:
+
+```cpp
+lb
+ub
+```
+
+and checks like:
+
+```cpp
+if (ub - lb <= 1)
+```
+
+are signs that you're fighting the binary search instead of using the standard pattern.
+
+---
+
+# Simpler Binary Search
+
+```cpp
+class Solution {
+public:
+    int searchInsert(vector<int>& nums, int target) {
+
+        int l = 0;
+        int r = nums.size() - 1;
+
+        while (l <= r) {
+
+            int mid = l + (r - l) / 2;
+
+            if (nums[mid] == target)
+                return mid;
+
+            else if (nums[mid] < target)
+                l = mid + 1;
+
+            else
+                r = mid - 1;
+        }
+
+        return l;
+    }
+};
+```
+
+---
+
+# Why `return l` works
+
+Suppose:
+
+```text
+nums = [1,3,5,6]
+target = 2
+```
+
+Binary search finishes with:
+
+```text
+l = 1
+r = 0
+```
+
+At this point:
+
+```text
+index 0 -> 1
+index 1 -> 3
+```
+
+The correct insertion position is:
+
+```text
+1
+```
+
+which is exactly `l`.
+
+---
+
+Another example:
+
+```text
+nums = [1,3,5,6]
+target = 7
+```
+
+Finish:
+
+```text
+l = 4
+r = 3
+```
+
+Return:
+
+```text
+4
+```
+
+Correct.
+
+---
+
+# Pattern Note
+
+This is one of the most important binary search problems because it teaches:
+
+```text
+Binary Search does not only find elements.
+It can find positions.
+```
+
+---
+
+# LeetCode 35 — Search Insert Position
+
+## Pattern
+
+👉 Binary Search
+
+---
+
+## Recognition Trigger
+
+Look for:
+
+```text
+sorted array
+search
+find position
+insert position
+lower bound
+```
+
+Think:
+
+```text
+Binary Search
+```
+
+---
+
+## Key Insight
+
+If target exists:
+
+```text
+return its index
+```
+
+If target does not exist:
+
+```text
+return where it would be inserted
+```
+
+After binary search ends:
+
+```text
+l = first position where target can go
+```
+
+Therefore:
+
+```cpp
+return l;
+```
+
+---
+
+## Binary Search Template
+
+```cpp
+while (l <= r) {
+
+    int mid = l + (r - l) / 2;
+
+    if (nums[mid] == target)
+        return mid;
+
+    else if (nums[mid] < target)
+        l = mid + 1;
+
+    else
+        r = mid - 1;
+}
+```
+
+---
+
+## Why use
+
+```cpp
+mid = l + (r - l) / 2;
+```
+
+instead of
+
+```cpp
+(l + r) / 2;
+```
+
+?
+
+Avoids integer overflow.
+
+---
+
+## Complexity
+
+```text
+Time: O(log n)
+Space: O(1)
+```
+
+---
+
+## One-line Memory Hook
+
+```text
+Binary Search can find the answer even when the target doesn't exist.
+```
