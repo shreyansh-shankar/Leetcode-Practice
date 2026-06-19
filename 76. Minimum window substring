@@ -1,0 +1,228 @@
+## Pattern
+
+👉 Sliding Window + Frequency Tracking (custom match counter)
+
+---
+
+## Recognition Trigger
+
+```text id="n1"
+find minimum substring
+that contains all characters of another string
+```
+
+Think:
+
+```text id="n2"
+expand → check validity → shrink → track best window
+```
+
+---
+
+# Core Idea (Your Style)
+
+Instead of tracking:
+
+```text id="n3"
+unique characters satisfied
+```
+
+you track:
+
+```text id="n4"
+total required character matches (formed)
+```
+
+Where:
+
+```text id="n5"
+formed = number of characters from t that are currently satisfied in window
+req = total characters in t (including duplicates)
+```
+
+---
+
+# Data Structures
+
+```cpp id="n6"
+unordered_map<char,int> sub   // frequency of t
+unordered_map<char,int> window // frequency of current window
+```
+
+---
+
+# Key Invariant
+
+A character contributes to `formed` only when:
+
+```text id="n7"
+window frequency is still <= required frequency
+```
+
+So:
+
+```cpp id="n8"
+if (window[c] < sub[c]) formed++;
+```
+
+This ensures you only count “useful matches”.
+
+---
+
+# Algorithm Flow (Your Logic)
+
+## Step 1 — Expand Right Window
+
+```text id="n9"
+move right pointer
+update window frequency
+increase formed if useful match found
+```
+
+---
+
+## Step 2 — Once valid window is formed
+
+```text id="n10"
+formed == req
+```
+
+Now try to shrink from left while keeping validity.
+
+---
+
+## Step 3 — Shrink Window
+
+```text id="n11"
+reduce window[left]
+if removing breaks requirement → formed--
+move left++
+```
+
+---
+
+## Step 4 — Track Answer
+
+```cpp id="n12"
+update currAns when valid window is smaller
+```
+
+---
+
+# Key Insight in YOUR APPROACH
+
+You are not using:
+
+```text id="n13"
+formed = number of unique characters satisfied
+```
+
+Instead you use:
+
+```text id="n14"
+formed = total matched character occurrences
+```
+
+So validity condition becomes:
+
+```text id="n15"
+formed == length of t
+```
+
+---
+
+# Complexity
+
+### Time:
+
+```text id="n16"
+O(m + n)
+```
+
+* Each character enters window once
+* Each character leaves window once
+
+---
+
+### Space:
+
+```text id="n17"
+O(k)
+```
+
+k = distinct characters
+
+---
+
+# Why Your Approach Still Works
+
+Because you maintain:
+
+```text id="n18"
+correct match accounting (no overcounting)
++ correct decrement when window shrinks
+```
+
+So the invariant is preserved.
+
+---
+
+# Edge Case Handling (Important)
+
+Your checks like:
+
+```cpp id="n19"
+if (sub[s[left]] > 0)
+```
+
+ensure:
+
+```text id="n20"
+only required characters affect formed
+```
+
+Good safeguard.
+
+---
+
+# Weakness of this style (not wrong, just tradeoff)
+
+This approach:
+
+```text id="n21"
+mixes frequency tracking + validity + matching in one variable (formed)
+```
+
+So:
+
+* harder to reason about
+* more edge conditions
+* easier to break when modifying
+
+---
+
+# Strong Pattern Version (for comparison)
+
+Standard approach separates:
+
+```text id="n22"
+need count per character
++
+formed = how many characters fully satisfied
+```
+
+Yours:
+
+```text id="n23"
+formed = total satisfied character matches
+```
+
+Both valid — just different abstraction levels.
+
+---
+
+# One-line Memory Hook (YOUR APPROACH)
+
+```text id="n24"
+Expand window, count useful matches, shrink when fully matched, track smallest valid window.
+```
